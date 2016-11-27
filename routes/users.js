@@ -52,4 +52,17 @@ router.post('/updateuser', function(req, res) {
     });
 });
 
+/*
+ * POST to update linked id.
+ */
+router.post('/updatelinkedid', function(req, res) {
+    var db = req.db;
+    var collection = db.get('userlist');
+    collection.update({"_id": req.body.id}, {$set: {"linkedId" : req.body.linkedId}}, function(err, result){
+        res.send(
+            (err === null) ? { msg: result } : { msg: err }
+        );
+    });
+});
+
 module.exports = router;
