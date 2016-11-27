@@ -26,6 +26,18 @@ router.get('/user', function(req, res) {
 });
 
 /*
+ * GET user by id.
+ */
+router.get('/userid', function(req, res) {
+    var db = req.db;
+    var collection = db.get('userlist');
+    console.log(req.query.id);
+    collection.findOne({ "_id" : req.query.id}, {}, function(e,doc){
+        res.json(doc);
+    });
+});
+
+/*
  * POST to adduser.
  */
 router.post('/adduser', function(req, res) {
