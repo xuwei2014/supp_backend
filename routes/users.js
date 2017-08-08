@@ -109,4 +109,41 @@ router.post('/updatelinkedid', function(req, res) {
     });
 });
 
+/*
+ * POST to push notification
+ */
+router.post('/notify', function(req, res) {
+    var apn = req.apn;
+    var options = {
+      token: {
+        key: req.certpath + "/key.p8",
+        keyId: "F9Q3WHZ2FT",
+        teamId: "2ND3U98YXB",
+      },
+      production: true,
+    };
+    var apnProvider = new apn.Provider(options);
+
+    var db = req.db;
+    var collection = db.get('userlist');
+    console.log(req.query.id);
+    collection.findOne({ "_id" : req.body.id}, {}, function(e,doc){
+        var deviceToken = doc.Token;
+        var note = new apn.Notification();
+
+        note.expiry = Math.floor(Date.now() / 1000) + 3600 * 24 * 2; // Expires 2 days from now.
+        note.badge = 1;
+        note.sound = "ping.aiff";
+        note.alert = doc.Partner + " has completed the Relationship Tune-Up! Open now to see the results!";
+        note.payload = {'messageFrom': doc.linkedId};
+        note.topic = "com.stokleymarcus.TuneUp";
+
+        apnProvider.send(note, deviceToken).then( (result) => {
+            console.log(result);
+            res.send("hello");
+        });
+
+    });
+});
+
 module.exports = router;

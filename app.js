@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/supp');
+// APNS
+var apn = require('apn');
+var certpath = path.join(__dirname, 'cert');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -29,6 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Make our db accessible to our router
 app.use(function(req,res,next){
     req.db = db;
+    req.apn = apn;
+    req.certpath = certpath;
         next();
 });
 
