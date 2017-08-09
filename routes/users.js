@@ -146,4 +146,35 @@ router.post('/notify', function(req, res) {
     });
 });
 
+router.post('/notifyAndroid', function(req, res) {
+    var gcm = require('node-gcm');
+    var sender = new gcm.Sender('AAAAn9-McJQ:APA91bGbM0_72T1Pqg-Y-oHzAU-OKlRd-F1uBIB-gyws-Hw4BzHFfPFx0gVwUw9N1cJHfY2r46jNqspGmQhitkNaPpHwGiEXaFqFj0lfvOrZBDXvwkHH1t5q_OSpQC8zf30DM2sTldHg');
+
+    var db = req.db;
+    var collection = db.get('userlist');
+    console.log(req.body.id);
+    collection.findOne({ "_id" : req.body.id}, {}, function(e,doc){
+        var deviceToken = doc.Token;
+
+        var message = new gcm.Message({
+	    data : { finished : "User2 finished!"},
+	    notification : {
+		body : doc.Partner + " has completed the Relationship Booster! Open now to see the results!"
+	    }
+	});
+
+	var regTokens = [deviceToken];
+
+	sender.send(message, { registrationTokens: regTokens }, function (err, response) {
+	        if (err) {
+		    console.error(err);
+		} else {
+		    console.log(response);
+		    res.send("hello");
+		}
+	});
+    });
+
+});
+
 module.exports = router;
