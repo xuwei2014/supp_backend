@@ -134,7 +134,7 @@ router.post('/notify', function(req, res) {
         note.expiry = Math.floor(Date.now() / 1000) + 3600 * 24 * 2; // Expires 2 days from now.
         note.badge = 1;
         note.sound = "ping.aiff";
-        note.alert = doc.Partner + " has completed the Relationship Tune-Up! Open now to see the results!";
+        note.alert = doc.Partner + " has completed the Relationship Booster! Open now to see the results!";
         note.payload = {'messageFrom': doc.linkedId};
         note.topic = "com.stokleymarcus.TuneUp";
 
